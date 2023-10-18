@@ -12,18 +12,44 @@ Dotenv.load
 osuny = OsunyApi.new host: ENV['OSUNY_API_HOST'], token: ENV['OSUNY_API_TOKEN']
 website = osuny.communication.website ENV['OSUNY_WEBSITE_ID']
 
-url = 'https://www.iut.u-bordeaux.fr/general/'
+url = 'https://www.iut.u-bordeaux.fr/general'
 api = Wordpress::Api.new url
+
+def page_migration_identifier(id)
+  "iut.u-bordeaux.fr-page-#{id}"
+end
 
 api.pages.each do |page|
   title = Wordpress::Api.clean_string(page['title']['rendered'])
+  migration_identifier = page_migration_identifier page['id']
   puts title
+
+  summary = page['excerpt']['rendered']
+  summary = Wordpress::Api.clean_html summary
+  summary = ActionController::Base.helpers.strip_tags summary
+  text = page['content']['rendered']
+  text = Wordpress::Api.clean_html text
+
   data = {
-    migration_identifier: "iut.u-bordeaux.fr-page-#{page['id']}",
+    migration_identifier: migration_identifier,
     title: title,
-    slug: page['slug'],
-    summary: ActionController::Base.helpers.strip_tags(Wordpress::Api.clean_html(page['excerpt']['rendered'])),
-    content: Wordpress::Api.clean_html(page['content']['rendered'])
+    summary: summary,
+    blocks: [
+      {
+        template_kind: 'chapter',
+        migration_identifier: "#{migration_identifier}-chapter",
+        data: {
+          text: text
+        }
+      }
+    ]
   }
+
+  if page['parent'] != 0
+    data[:parent] = {
+      migration_identifier: page_migration_identifier(page['parent'])
+    }
+  end
+
   website.page.import data
 end
