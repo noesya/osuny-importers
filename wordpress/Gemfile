@@ -5,3 +5,4 @@ gem 'byebug'
 gem 'dotenv'
 gem 'httparty'
 gem 'osuny_api'#, path: '../../osuny/osuny-api'
+
