@@ -16,13 +16,14 @@ url = 'https://www.iut.u-bordeaux.fr/general/'
 api = Wordpress::Api.new url
 
 api.pages.each do |page|
+  title = Wordpress::Api.clean_string(page['title']['rendered'])
+  puts title
   data = {
     migration_identifier: "iut.u-bordeaux.fr-page-#{page['id']}",
-    title: Wordpress::Api.clean_string(page['title']['rendered']),
+    title: title,
     slug: page['slug'],
     summary: ActionController::Base.helpers.strip_tags(Wordpress::Api.clean_html(page['excerpt']['rendered'])),
     content: Wordpress::Api.clean_html(page['content']['rendered'])
   }
-  puts data
   website.page.import data
 end
