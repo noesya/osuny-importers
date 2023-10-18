@@ -1,0 +1,25 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    byebug (11.1.3)
+    dotenv (2.8.1)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
+    mini_mime (1.1.5)
+    multi_xml (0.6.0)
+    osuny_api (0.2.2)
+      httparty
+
+PLATFORMS
+  arm64-darwin-22
+  x86_64-darwin-22
+
+DEPENDENCIES
+  byebug
+  dotenv (~> 2.8)
+  httparty
+  osuny_api
+
+BUNDLED WITH
+   2.4.6
