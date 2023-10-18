@@ -8,7 +8,7 @@ GEM
       multi_xml (>= 0.5.2)
     mini_mime (1.1.5)
     multi_xml (0.6.0)
-    osuny_api (0.2.2)
+    osuny_api (0.2.3)
       httparty
 
 PLATFORMS
