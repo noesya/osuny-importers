@@ -4,12 +4,9 @@ require 'bundler/setup'
 Bundler.require(:default)
 Dotenv.load
 
-# Osuny
-osuny = OsunyApi.new  host: ENV['OSUNY_API_HOST'], 
-                      token: ENV['OSUNY_API_TOKEN']
+osuny = OsunyApi.new host: ENV['OSUNY_API_HOST'], token: ENV['OSUNY_API_TOKEN']
 website = osuny.communication.website ENV['OSUNY_WEBSITE_ID']
 
-# JSON
 url = 'https://sheetdb.io/api/v1/7it5jspo2ssq7'
 response = HTTParty.get url
 books = JSON.parse response.body
