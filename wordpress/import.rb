@@ -15,21 +15,15 @@ website = osuny.communication.website ENV['OSUNY_WEBSITE_ID']
 url = 'https://www.iut.u-bordeaux.fr/general'
 api = Wordpress::Api.new url
 
-def page_migration_identifier(id)
-  "iut.u-bordeaux.fr-page-#{id}"
-end
-
-api.pages.each do |page|
-  title = Wordpress::Api.clean_string(page['title']['rendered'])
-  migration_identifier = page_migration_identifier page['id']
-  puts title
-
-  summary = page['excerpt']['rendered']
+def data_from_hash(hash, migration_identifier)
+  title = hash['title']['rendered']
+  title = Wordpress::Api.clean_string title
+  summary = hash['excerpt']['rendered']
   summary = Wordpress::Api.clean_html summary
   summary = ActionController::Base.helpers.strip_tags summary
-  text = page['content']['rendered']
+  text = hash['content']['rendered']
   text = Wordpress::Api.clean_html text
-
+  puts title
   data = {
     migration_identifier: migration_identifier,
     title: title,
@@ -44,12 +38,27 @@ api.pages.each do |page|
       }
     ]
   }
+end
 
-  if page['parent'] != 0
+# Pages
+def page_migration_identifier(id)
+  "iut.u-bordeaux.fr-page-#{id}"
+end
+
+api.pages.each do |hash|
+  migration_identifier = page_migration_identifier hash['id']
+  data = data_from_hash hash, migration_identifier
+  if hash['parent'] != 0
     data[:parent] = {
-      migration_identifier: page_migration_identifier(page['parent'])
+      migration_identifier: page_migration_identifier(hash['parent'])
     }
   end
-
   website.page.import data
+end
+
+# Posts
+api.posts.each do |hash|
+  migration_identifier = "iut.u-bordeaux.fr-post-#{hash['id']}"
+  data = data_from_hash hash, migration_identifier
+  website.post.import data
 end
