@@ -42,7 +42,7 @@ class WordpressApi
   end
 
   def load_paged(url, page)
-    # puts "Load #{url } on page #{page}"
+    puts "Load #{url } on page #{page}"
     load_url "#{url}?page=#{page}&per_page=#{PER_BATCH}"
   end
 
