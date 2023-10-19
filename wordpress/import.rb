@@ -11,6 +11,7 @@ osuny = OsunyApi.new host: ENV['OSUNY_API_HOST'], token: ENV['OSUNY_API_TOKEN']
 website = osuny.communication.website ENV['OSUNY_WEBSITE_ID']
 
 url = 'https://www.iut.u-bordeaux.fr/general'
+migration_identifier_root = 'iut.u-bordeaux.fr'
 api = Wordpress::Api.new url
 
 def data_from_hash(hash, migration_identifier)
@@ -35,24 +36,20 @@ def data_from_hash(hash, migration_identifier)
 end
 
 # Pages
-def page_migration_identifier(id)
-  "iut.u-bordeaux.fr-page-#{id}"
-end
-
 api.pages.each do |hash|
-  migration_identifier = page_migration_identifier hash['id']
+  migration_identifier = "#{migration_identifier_root}-page-#{hash['id']}"
   data = data_from_hash hash, migration_identifier
   if hash['parent'] != 0
     data[:parent] = {
-      migration_identifier: page_migration_identifier(hash['parent'])
+      migration_identifier: "#{migration_identifier_root}-page-#{hash['parent']}"
     }
   end
-  website.page.import data
+  # website.page.import data
 end
 
 # Posts
 api.posts.each do |hash|
-  migration_identifier = "iut.u-bordeaux.fr-post-#{hash['id']}"
+  migration_identifier = "#{migration_identifier_root}-post-#{hash['id']}"
   data = data_from_hash hash, migration_identifier
   website.post.import data
 end
