@@ -14,13 +14,3 @@
 bundle update
 bundle exec ruby import.rb
 ```
-
-## Les tests
-
-Un jeu de test couvre des cas problématiques dans WordPress, avec Minitest.
-
-Pour le lancer : 
-
-```
-rake
-```
