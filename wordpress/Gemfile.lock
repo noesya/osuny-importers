@@ -99,6 +99,7 @@ DEPENDENCIES
   byebug
   dotenv
   httparty
+  minitest
   osuny_api
   rest-client
   sanitize

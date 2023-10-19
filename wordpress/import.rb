@@ -1,9 +1,7 @@
-require 'action_view'
-require 'action_controller'
-require 'sanitize'
 require 'rubygems'
 require 'bundler/setup'
 require_relative 'wordpress/api'
+require_relative 'wordpress/clean'
 require_relative 'wordpress/download'
 
 Bundler.require(:default)
@@ -16,13 +14,9 @@ url = 'https://www.iut.u-bordeaux.fr/general'
 api = Wordpress::Api.new url
 
 def data_from_hash(hash, migration_identifier)
-  title = hash['title']['rendered']
-  title = Wordpress::Api.clean_string title
-  summary = hash['excerpt']['rendered']
-  summary = Wordpress::Api.clean_html summary
-  summary = ActionController::Base.helpers.strip_tags summary
-  text = hash['content']['rendered']
-  text = Wordpress::Api.clean_html text
+  title = Wordpress::Clean.string hash['title']['rendered']
+  summary = Wordpress::Clean.html_to_string hash['excerpt']['rendered']
+  text = Wordpress::Clean.html hash['content']['rendered']
   puts title
   data = {
     migration_identifier: migration_identifier,
