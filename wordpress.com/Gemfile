@@ -1,0 +1,11 @@
+source "https://rubygems.org"
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
+gem 'actionview'
+gem 'actionpack'
+gem 'byebug'
+gem 'dotenv'
+gem 'httparty'
+gem 'osuny_api'#, path: '../../osuny/osuny-api'
+gem 'rest-client'
+gem 'sanitize'
